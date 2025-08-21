@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#1e40af"/>
+      <stop offset="1" stop-color="#a47551"/>
+    </linearGradient>
+  </defs>
+  <circle cx="64" cy="64" r="60" fill="url(#g)"/>
+  <path d="M34 78c0-10 12-18 30-18s30 8 30 18-12 18-30 18-30-8-30-18z" fill="#fff" opacity=".9"/>
+  <path d="M44 50c0-8 7-14 16-14s16 6 16 14c0 14-32 14-32 0z" fill="#fff" opacity=".9"/>
+  <circle cx="64" cy="54" r="6" fill="#6b4423"/>
+  <text x="64" y="112" font-size="16" text-anchor="middle" fill="#fff" font-family="Poppins, Arial" font-weight="700">LumerBites</text>
+</svg>

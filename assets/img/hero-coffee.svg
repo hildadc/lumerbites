@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480">
+  <rect width="640" height="480" fill="#fff8e6"/>
+  <g transform="translate(80,40)">
+    <rect x="0" y="200" width="480" height="140" rx="24" fill="#ffffff" stroke="#e6d8bd"/>
+    <g transform="translate(40,40)">
+      <rect x="0" y="0" width="160" height="160" rx="20" fill="#f6efe0" stroke="#e6d8bd"/>
+      <circle cx="80" cy="90" r="52" fill="#a47551"/>
+      <circle cx="95" cy="85" r="10" fill="#6b4423"/>
+      <circle cx="65" cy="105" r="8" fill="#6b4423"/>
+    </g>
+    <g transform="translate(240,10)">
+      <rect x="0" y="0" width="180" height="220" rx="30" fill="#1e40af"/>
+      <rect x="30" y="30" width="120" height="120" rx="16" fill="#fff"/>
+      <rect x="55" y="160" width="80" height="24" rx="12" fill="#a47551"/>
+    </g>
+    <text x="40" y="240" font-size="28" font-family="Poppins" fill="#6b4423" font-weight="700">Cookies & Coffee</text>
+    <text x="40" y="270" font-size="16" font-family="Poppins" fill="#6b4423">Fresh, cozy, and melty goodness.</text>
+  </g>
+</svg>

@@ -2,145 +2,171 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>LumerBites — Cookies & Coffee Kekinian</title>
-  <meta name="description" content="LumerBites: cookies & coffee kekinian. Manis, renyah, dan bikin nagih.">
+  <meta name="description" content="Cookies & coffee kekinian. Fresh-baked goodness, vibes cozy.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <link rel="icon" type="image/svg+xml" href="assets/img/svg/logo.svg">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css"/>
+  <link rel="icon" href="assets/img/logo.svg" type="image/svg+xml"/>
 </head>
 <body>
-  <!-- Top Bar -->
-  <header class="topbar">
-    <div class="container">
-      <a href="#" class="brand">
-        <img src="assets/img/svg/logo.svg" alt="LumerBites logo" class="logo" />
-        <span>LumerBites</span>
-      </a>
-      <nav class="nav">
-        <a href="#best-sellers">Best Sellers</a>
-        <a href="#testimoni">Testimoni</a>
-        <a href="#kritik-saran">Kritik & Saran</a>
-        <a href="#alamat">Alamat</a>
-        <button class="cart-button" id="openCart" aria-label="Buka keranjang">
-          <svg class="icon"><use href="assets/img/svg/sprite.svg#cart"/></svg>
-          <span id="cartCount" class="badge">0</span>
-        </button>
-      </nav>
-    </div>
+  <header class="site-header">
+    <a class="brand" href="#">
+      <img src="assets/img/logo.svg" alt="LumerBites logo" class="brand-logo"/>
+      <span class="brand-text">LumerBites</span>
+    </a>
+    <nav class="nav">
+      <a href="#produk">Produk</a>
+      <a href="#testimoni">Testimoni</a>
+      <a href="#kritik-saran">Kritik & Saran</a>
+      <a href="#kontak">Kontak</a>
+      <button id="cartButton" class="btn btn-outline">Keranjang <span class="badge" id="cartCount">0</span></button>
+    </nav>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="container hero-grid">
-      <div class="hero-copy">
-        <h1>Cemilan manis & kopi nikmat, <span class="accent">meleleh</span> di hati.</h1>
-        <p>Cookies freshly baked berpadu kopi spesial LumerBites. Cita rasa mocca dan coklat yang bikin hari makin <em>nyeruput</em>.</p>
-        <div class="actions">
-          <a href="#best-sellers" class="btn primary">Belanja Sekarang</a>
-          <a href="#kritik-saran" class="btn ghost">Kritik & Saran</a>
+  <main>
+    <section class="hero">
+      <div class="hero-text">
+        <h1>Cookies <span class="accent">&</span> Coffee <br/> yang <span class="accent">Lumer</span> di Hati</h1>
+        <p>Rasakan perpaduan cookies renyah dan kopi smokey modern. Dikirim fresh setiap hari.</p>
+        <div class="hero-cta">
+          <a href="#produk" class="btn btn-primary">Belanja Sekarang</a>
+          <button id="checkoutTop" class="btn btn-ghost">Checkout</button>
+        </div>
+        <div class="address">
+          <svg class="icon"><use href="assets/img/icons/sprite.svg#pin"></use></svg>
+          <span>Jl. Grand Galaxy Park, Malang</span>
         </div>
       </div>
       <div class="hero-art">
-        <img src="assets/img/svg/hero-cookies-coffee.svg" alt="Ilustrasi cookies dan coffee" />
+        <img src="assets/img/hero-coffee.svg" alt="coffee & cookies illustration"/>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Best Sellers Slider (max 5) -->
-  <section id="best-sellers" class="section">
-    <div class="container">
+    <section id="produk" class="section">
       <div class="section-head">
         <h2>Produk Terlaris</h2>
-        <p>Favorit pelanggan kami — pilih, tambah ke keranjang, dan checkout 🎉</p>
+        <p>Maksimal 5 produk favorit pelanggan kami.</p>
       </div>
 
-      <div class="slider" data-max="5">
-        <button class="slider-nav prev" aria-label="Sebelumnya" id="prevSlide">&#10094;</button>
-        <div class="slider-track" id="sliderTrack">
-          <!-- Cards will be injected by JS -->
+      <div class="slider">
+        <button class="slider-nav prev" aria-label="Sebelumnya">&#10094;</button>
+        <div class="slides" id="productSlides">
+          <!-- Slides injected by JS -->
         </div>
-        <button class="slider-nav next" aria-label="Berikutnya" id="nextSlide">&#10095;</button>
+        <button class="slider-nav next" aria-label="Berikutnya">&#10095;</button>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Testimonials -->
-  <section id="testimoni" class="section alt">
-    <div class="container">
+    <section id="testimoni" class="section">
       <div class="section-head">
         <h2>Testimoni Pelanggan</h2>
-        <p>Suara jujur dari pelanggan setia LumerBites.</p>
+        <p>Suara mereka tentang LumerBites.</p>
+      </div>
+      <div id="testimonialList" class="testimonials">
+        <!-- Testimonials injected here -->
       </div>
 
-      <div id="testimonialList" class="testi-grid">
-        <!-- Initial testimonials -->
-        <article class="testi-card">
-          <img src="assets/img/svg/avatar-1.svg" alt="Avatar pelanggan" class="avatar">
-          <div>
-            <h3>@dianbites</h3>
-            <p>“Cookiesnya renyah di luar, lumer di dalam. Kopinya juga pas banget, nggak terlalu pahit.”</p>
-          </div>
-        </article>
-        <article class="testi-card">
-          <img src="assets/img/svg/avatar-2.svg" alt="Avatar pelanggan" class="avatar">
-          <div>
-            <h3>@fikriko</h3>
-            <p>“Packaging rapi, pengiriman cepat, rasa coklatnya mantul! Repeat order pasti.”</p>
-          </div>
-        </article>
-      </div>
-
-      <form id="testimonialForm" class="card form">
+      <div class="card form-card">
         <h3>Tulis Testimoni Kamu</h3>
-        <div class="grid">
-          <label>
-            <span>Nama / Username</span>
-            <input type="text" id="tName" placeholder="cth: @username" required>
+        <form id="testimonialForm">
+          <div class="grid">
+            <label>Nama
+              <input type="text" name="name" placeholder="Nama Anda" required/>
+            </label>
+            <label>Rating
+              <select name="rating" required>
+                <option value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </label>
+          </div>
+          <label>Pesan
+            <textarea name="message" placeholder="Ceritakan pengalaman Anda..." rows="3" required></textarea>
           </label>
-          <label class="full">
-            <span>Testimoni</span>
-            <textarea id="tMessage" rows="3" placeholder="Ceritakan pengalaman kamu..." required></textarea>
-          </label>
-        </div>
-        <button type="submit" class="btn primary">Kirim Testimoni</button>
-        <p class="small muted">*Testimoni akan tampil setelah disetujui (simulasi: tampil langsung & disimpan lokal).</p>
-      </form>
-    </div>
-  </section>
+          <button type="submit" class="btn btn-primary">Kirim Testimoni</button>
+        </form>
+      </div>
+    </section>
 
-  <!-- Kritik & Saran -->
-  <section id="kritik-saran" class="section">
-    <div class="container">
+    <section id="kritik-saran" class="section">
       <div class="section-head">
         <h2>Kritik & Saran</h2>
-        <p>Bantu kami jadi lebih baik. Masukanmu berharga!</p>
+        <p>Kami terbuka untuk masukan terbaik Anda.</p>
       </div>
-      <form id="feedbackForm" class="card form">
-        <div class="grid">
-          <label>
-            <span>Nama</span>
-            <input type="text" id="fName" placeholder="Nama kamu" required>
+      <div class="card form-card">
+        <form id="feedbackForm">
+          <div class="grid">
+            <label>Nama
+              <input type="text" name="name" placeholder="Nama (opsional)"/>
+            </label>
+            <label>Email
+              <input type="email" name="email" placeholder="Email (opsional)"/>
+            </label>
+          </div>
+          <label>Pesan
+            <textarea name="message" placeholder="Tulis kritik atau saran Anda di sini..." rows="4" required></textarea>
           </label>
-          <label>
-            <span>Email</span>
-            <input type="email" id="fEmail" placeholder="email@contoh.com" required>
-          </label>
-          <label class="full">
-            <span>Pesan</span>
-            <textarea id="fMessage" rows="4" placeholder="Tulis kritik/saran..." required></textarea>
-          </label>
-        </div>
-        <button type="submit" class="btn primary">Kirim</button>
-        <p id="feedbackNote" class="small success" hidden>Terima kasih! Masukanmu tersimpan.</p>
-      </form>
-    </div>
-  </section>
+          <button type="submit" class="btn btn-outline">Kirim Masukan</button>
+          <p class="muted" id="feedbackStatus" role="status"></p>
+        </form>
+      </div>
+    </section>
 
-  <!-- Cart Drawer -->
-  <aside id="cartDrawer" class="cart" aria-hidden="true">
+    <section id="kontak" class="section">
+      <div class="section-head">
+        <h2>Kontak & Lokasi</h2>
+        <p>Datang dan rasakan vibes-nya.</p>
+      </div>
+      <div class="card contact-card">
+        <div class="contact-row">
+          <div class="contact-item">
+            <svg class="icon"><use href="assets/img/icons/sprite.svg#pin"></use></svg>
+            <div>
+              <strong>Alamat</strong>
+              <p>Jl. Grand Galaxy Park, Malang</p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="icon"><use href="assets/img/icons/sprite.svg#phone"></use></svg>
+            <div>
+              <strong>Telepon</strong>
+              <p><a href="tel:+6281234567890">+62 812-3456-7890</a></p>
+            </div>
+          </div>
+          <div class="contact-item">
+            <svg class="icon"><use href="assets/img/icons/sprite.svg#mail"></use></svg>
+            <div>
+              <strong>Email</strong>
+              <p><a href="mailto:halo@lumerbites.id">halo@lumerbites.id</a></p>
+            </div>
+          </div>
+        </div>
+        <div class="map">
+          <a target="_blank" rel="noopener" href="https://maps.google.com/?q=Jl.+Grand+Galaxy+Park,+Malang" class="btn btn-ghost">Lihat di Google Maps</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="left">
+      <img src="assets/img/logo.svg" alt="" class="brand-logo small"/>
+      <span>&copy; <span id="year"></span> LumerBites. All rights reserved.</span>
+    </div>
+    <div class="right">
+      <button id="checkoutBottom" class="btn btn-primary">Checkout</button>
+    </div>
+  </footer>
+
+  <!-- Cart drawer -->
+  <aside id="cartDrawer" class="cart-drawer" aria-hidden="true">
     <div class="cart-header">
       <h3>Keranjang</h3>
       <button id="closeCart" class="icon-btn" aria-label="Tutup keranjang">&times;</button>
@@ -148,37 +174,12 @@
     <div id="cartItems" class="cart-items"></div>
     <div class="cart-footer">
       <div class="cart-total">
-        <span>Total</span>
-        <strong id="cartTotal">Rp0</strong>
+        Total: <span id="cartTotal">Rp0</span>
       </div>
-      <button id="checkoutBtn" class="btn checkout">Checkout</button>
+      <button id="checkoutButton" class="btn btn-primary full">Checkout</button>
+      <button id="clearCart" class="btn btn-ghost full">Bersihkan</button>
     </div>
   </aside>
-  <div id="overlay" class="overlay" hidden></div>
-
-  <!-- Address & Footer -->
-  <footer id="alamat" class="footer">
-    <div class="container footer-grid">
-      <div>
-        <h3>Alamat Toko</h3>
-        <p>Jl. grand galaxy park, Malang</p>
-        <p class="muted small">Buka setiap hari 08.00–21.00 WIB</p>
-      </div>
-      <div>
-        <h3>Kontak</h3>
-        <p>Email: <a href="mailto:hello@lumerbites.id">hello@lumerbites.id</a></p>
-        <p>Instagram: <a href="https://instagram.com/lumerbites" target="_blank" rel="noopener">@lumerbites</a></p>
-      </div>
-      <div>
-        <h3>Tentang</h3>
-        <p>Cookies & coffee kekinian dengan bahan premium. Dipanggang harian, dikemas dengan hati.</p>
-      </div>
-    </div>
-    <div class="container copyright">
-      <img src="assets/img/svg/logo-wordmark.svg" alt="LumerBites wordmark" class="wordmark">
-      <p>© <span id="year"></span> LumerBites. All rights reserved.</p>
-    </div>
-  </footer>
 
   <script src="assets/js/app.js" defer></script>
 </body>

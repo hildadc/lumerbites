@@ -1,167 +1,197 @@
-// LumerBites Frontend
-const currency = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(n);
+// LumerBites JS
+const currency = (n)=> new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR', maximumFractionDigits:0}).format(n);
 
-// Demo product data (<=5 items)
+// Sample products (max 5)
 const products = [
-  {id:'coklat-lumer', name:'Cookies Coklat Lumer', price:22000, img:'assets/img/svg/cookie-choco.svg'},
-  {id:'mocca-crunch', name:'Mocca Crunch Cookies', price:24000, img:'assets/img/svg/cookie-mocca.svg'},
-  {id:'almond-bites', name:'Almond Bites', price:26000, img:'assets/img/svg/cookie-almond.svg'},
-  {id:'kopi-susu', name:'Kopi Susu Lumer', price:18000, img:'assets/img/svg/coffee-cup.svg'},
-  {id:'latte-mocca', name:'Mocca Latte', price:20000, img:'assets/img/svg/coffee-mocca.svg'}
-].slice(0,5);
+  { id:'cookie1', name:'Choco Lava Cookie', price:18000, image:'assets/img/cookie1.svg', desc:'Isi coklat yang meleleh.' },
+  { id:'cookie2', name:'Almond Crunch', price:17000, image:'assets/img/cookie2.svg', desc:'Renyaah dengan almond panggang.' },
+  { id:'cookie3', name:'Matcha Cream Cookie', price:19000, image:'assets/img/cookie3.svg', desc:'Matcha premium lembut.' },
+  { id:'latte1', name:'Mocha Latte', price:24000, image:'assets/img/cookie4.svg', desc:'Kopi mocha balance.' },
+  { id:'latte2', name:'Caramel Macchiato', price:26000, image:'assets/img/cookie5.svg', desc:'Manis gurih caramel.' },
+];
 
-// DOM refs
-const track = document.getElementById('sliderTrack');
-const prev = document.getElementById('prevSlide');
-const next = document.getElementById('nextSlide');
-const cartDrawer = document.getElementById('cartDrawer');
-const overlay = document.getElementById('overlay');
-const cartItemsEl = document.getElementById('cartItems');
-const cartTotalEl = document.getElementById('cartTotal');
-const cartCountEl = document.getElementById('cartCount');
-const openCartBtn = document.getElementById('openCart');
-const closeCartBtn = document.getElementById('closeCart');
-const checkoutBtn = document.getElementById('checkoutBtn');
-
-// Year
-document.getElementById('year').textContent = new Date().getFullYear();
-
-// Render slider cards
-function renderProducts(){
-  track.innerHTML = products.map(p => `
-    <article class="card product-card" data-id="${p.id}">
-      <div class="thumb">
-        <img src="${p.img}" alt="${p.name}">
-      </div>
-      <h3>${p.name}</h3>
-      <div class="price">${currency(p.price)}</div>
-      <div class="actions-row">
-        <button class="btn add" data-action="add">Tambah ke Keranjang</button>
-        <button class="btn buy" data-action="buy">Beli</button>
-      </div>
-    </article>
-  `).join('');
-}
-renderProducts();
-
-// Simple slider controls
-prev.addEventListener('click', () => track.scrollBy({left:-track.clientWidth, behavior:'smooth'}));
-next.addEventListener('click', () => track.scrollBy({left: track.clientWidth, behavior:'smooth'}));
+// LocalStorage helpers
+const read = (key, fallback)=> {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch(e){ return fallback; }
+};
+const write = (key, value)=> localStorage.setItem(key, JSON.stringify(value));
 
 // Cart state
-let cart = JSON.parse(localStorage.getItem('lumerbites_cart')||'{}');
+let cart = read('lumer_cart', []);
+const saveCart = ()=> write('lumer_cart', cart);
 
-function saveCart(){ localStorage.setItem('lumerbites_cart', JSON.stringify(cart)); }
+function addToCart(id){
+  const item = cart.find(i=>i.id===id);
+  if(item){ item.qty += 1; } else {
+    const p = products.find(p=>p.id===id);
+    if(!p) return;
+    cart.push({ id:p.id, name:p.name, price:p.price, image:p.image, qty:1 });
+  }
+  saveCart();
+  renderCart();
+}
 
-function updateCartBadge(){
-  const count = Object.values(cart).reduce((a,c)=>a+c.qty,0);
-  cartCountEl.textContent = count;
+function changeQty(id, delta){
+  const idx = cart.findIndex(i=>i.id===id);
+  if(idx>-1){
+    cart[idx].qty += delta;
+    if(cart[idx].qty<=0) cart.splice(idx,1);
+    saveCart();
+    renderCart();
+  }
+}
+
+function cartTotal(){
+  return cart.reduce((a,b)=> a + b.price * b.qty, 0);
 }
 
 function renderCart(){
-  const items = Object.values(cart);
-  cartItemsEl.innerHTML = items.length ? items.map(item => `
-    <div class="cart-item" data-id="${item.id}">
-      <img src="${item.img}" alt="${item.name}" />
+  const count = cart.reduce((a,b)=> a + b.qty, 0);
+  document.getElementById('cartCount').textContent = count;
+  const items = document.getElementById('cartItems');
+  const total = document.getElementById('cartTotal');
+  items.innerHTML = cart.map(c=>`
+    <div class="cart-item">
+      <img src="${c.image}" alt="${c.name}" width="64" height="64"/>
       <div>
-        <div><strong>${item.name}</strong></div>
-        <div class="small muted">${currency(item.price)} x <span class="qty-num">${item.qty}</span></div>
+        <h4>${c.name}</h4>
+        <div class="muted">${currency(c.price)}</div>
         <div class="qty">
-          <button data-action="dec">-</button>
-          <button data-action="inc">+</button>
-          <button data-action="remove">Hapus</button>
+          <button class="btn btn-ghost" onclick="changeQty('${c.id}', -1)">-</button>
+          <span>${c.qty}</span>
+          <button class="btn btn-ghost" onclick="changeQty('${c.id}', 1)">+</button>
         </div>
       </div>
-      <div><strong>${currency(item.price*item.qty)}</strong></div>
+      <div><strong>${currency(c.price * c.qty)}</strong></div>
     </div>
-  `).join('') : '<p class="muted">Keranjang kosong.</p>';
-  const total = items.reduce((a,it)=>a+it.price*it.qty,0);
-  cartTotalEl.textContent = currency(total);
-  updateCartBadge();
-}
-renderCart();
-
-function addToCart(prod, qty=1){
-  if(!cart[prod.id]) cart[prod.id] = {...prod, qty:0};
-  cart[prod.id].qty += qty;
-  saveCart(); renderCart();
+  `).join('');
+  total.textContent = currency(cartTotal());
 }
 
-// Delegation: product card buttons
-track.addEventListener('click', (e)=>{
-  const btn = e.target.closest('button'); if(!btn) return;
-  const card = e.target.closest('.product-card'); const id = card.dataset.id;
-  const prod = products.find(p=>p.id===id);
-  if(btn.dataset.action==='add'){ addToCart(prod,1); }
-  if(btn.dataset.action==='buy'){ addToCart(prod,1); openCart(); }
-});
-
-// Cart controls
-cartItemsEl.addEventListener('click', (e)=>{
-  const btn = e.target.closest('button'); if(!btn) return;
-  const row = e.target.closest('.cart-item'); const id = row.dataset.id;
-  if(btn.dataset.action==='inc'){ cart[id].qty++; }
-  if(btn.dataset.action==='dec'){ cart[id].qty = Math.max(1, cart[id].qty-1); }
-  if(btn.dataset.action==='remove'){ delete cart[id]; }
-  saveCart(); renderCart();
-});
-
-function openCart(){ cartDrawer.classList.add('open'); overlay.hidden = false; cartDrawer.setAttribute('aria-hidden','false'); }
-function closeCart(){ cartDrawer.classList.remove('open'); overlay.hidden = true; cartDrawer.setAttribute('aria-hidden','true'); }
-openCartBtn.addEventListener('click', openCart);
-document.getElementById('closeCart').addEventListener('click', closeCart);
-overlay.addEventListener('click', closeCart);
-
-// Checkout
-checkoutBtn.addEventListener('click', ()=>{
-  const items = Object.values(cart);
-  if(!items.length) return alert('Keranjang masih kosong 🙂');
-  const total = items.reduce((a,it)=>a+it.price*it.qty,0);
-  alert('Checkout berhasil (simulasi)!\nTotal: '+currency(total)+'\nTerima kasih sudah belanja di LumerBites.');
-  cart = {}; saveCart(); renderCart(); closeCart();
-});
-
-// Testimonials form (store to localStorage & render)
-const testiList = document.getElementById('testimonialList');
-const testiForm = document.getElementById('testimonialForm');
-const savedTesti = JSON.parse(localStorage.getItem('lumerbites_testi')||'[]');
-savedTesti.forEach(t=>appendTesti(t.name,t.message));
-
-function appendTesti(name, message){
-  const el = document.createElement('article');
-  el.className = 'testi-card';
-  el.innerHTML = \`
-    <img src="assets/img/svg/avatar-3.svg" alt="Avatar pelanggan" class="avatar">
-    <div><h3>\${name}</h3><p>\${message}</p></div>\`;
-  testiList.appendChild(el);
+// Slider
+let current = 0;
+function renderSlides(){
+  const wrap = document.getElementById('productSlides');
+  wrap.innerHTML = products.map(p=>`
+    <article class="slide">
+      <div class="media">
+        <img src="${p.image}" alt="${p.name}"/>
+      </div>
+      <div class="info">
+        <h3>${p.name}</h3>
+        <p class="muted">${p.desc}</p>
+        <div class="price">${currency(p.price)}</div>
+        <div class="cta-row">
+          <button class="btn btn-primary" onclick="addToCart('${p.id}')">Tambahkan ke Keranjang</button>
+          <button class="btn btn-outline" onclick="buyNow('${p.id}')">Beli Langsung</button>
+        </div>
+      </div>
+    </article>
+  `).join('');
+  updateSlider();
 }
 
-testiForm.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  const name = document.getElementById('tName').value.trim();
-  const message = document.getElementById('tMessage').value.trim();
-  if(!name || !message) return;
-  const arr = JSON.parse(localStorage.getItem('lumerbites_testi')||'[]');
-  arr.push({name,message, at: Date.now()});
-  localStorage.setItem('lumerbites_testi', JSON.stringify(arr));
-  appendTesti(name,message);
-  testiForm.reset();
+function updateSlider(){
+  const slides = document.querySelector('.slides');
+  slides.style.transform = `translateX(-${current*100}%)`;
+}
+function nextSlide(){ current = (current + 1) % products.length; updateSlider(); }
+function prevSlide(){ current = (current - 1 + products.length) % products.length; updateSlider(); }
+
+// Checkout (dummy summary + WA link prefilled)
+function checkout(){
+  if(cart.length===0){ alert('Keranjang masih kosong.'); return; }
+  const lines = cart.map(c=>`- ${c.name} x${c.qty} = ${currency(c.price*c.qty)}`).join('%0A');
+  const total = currency(cartTotal());
+  const msg = `Halo LumerBites, saya ingin order:%0A${lines}%0A%0ATotal: ${total}%0AAlamat: `;
+  const wa = `https://wa.me/6281234567890?text=${msg}`;
+  window.open(wa, '_blank');
+}
+
+// Buy now shortcut
+function buyNow(id){
+  cart = []; // new order
+  saveCart();
+  addToCart(id);
+  openCart();
+}
+
+// Testimonials
+let testimonials = read('lumer_testimonials', [
+  { name:'Nadia', rating:5, message:'Choco Lava-nya beneran lumer! Packaging rapi, repeat order sih ini.' },
+  { name:'Reza', rating:4, message:'Kopi mochanya pas manisnya. Cocok buat nongkrong sore.' },
+  { name:'Dewi', rating:5, message:'Almond Crunch favorit anak-anak. Pengiriman cepat.' },
+]);
+
+function renderTestimonials(){
+  const wrap = document.getElementById('testimonialList');
+  wrap.innerHTML = testimonials.map(t=>`
+    <div class="testimonial">
+      <div class="stars">${'★'.repeat(t.rating)}${'☆'.repeat(5-t.rating)}</div>
+      <p>${t.message}</p>
+      <div class="muted">— ${t.name}</div>
+    </div>
+  `).join('');
+}
+
+function addTestimonial(t){
+  testimonials.unshift(t);
+  write('lumer_testimonials', testimonials);
+  renderTestimonials();
+}
+
+// Forms
+document.addEventListener('DOMContentLoaded', ()=>{
+  // year
+  document.getElementById('year').textContent = new Date().getFullYear();
+  // slider
+  renderSlides();
+  document.querySelector('.slider-nav.next').addEventListener('click', nextSlide);
+  document.querySelector('.slider-nav.prev').addEventListener('click', prevSlide);
+  // cart
+  renderCart();
+  document.getElementById('cartButton').addEventListener('click', openCart);
+  document.getElementById('closeCart').addEventListener('click', closeCart);
+  document.getElementById('checkoutButton').addEventListener('click', checkout);
+  document.getElementById('checkoutTop').addEventListener('click', checkout);
+  document.getElementById('checkoutBottom').addEventListener('click', checkout);
+  document.getElementById('clearCart').addEventListener('click', ()=>{ cart=[]; saveCart(); renderCart(); });
+
+  // testimonial form
+  document.getElementById('testimonialForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const t = {
+      name: fd.get('name') || 'Anonim',
+      rating: parseInt(fd.get('rating') || '5', 10),
+      message: fd.get('message').toString().trim(),
+    };
+    if(!t.message){ return; }
+    addTestimonial(t);
+    e.currentTarget.reset();
+    alert('Terima kasih untuk testimoninya!');
+  });
+
+  // feedback
+  document.getElementById('feedbackForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const fd = new FormData(e.currentTarget);
+    const payload = {
+      name: fd.get('name'),
+      email: fd.get('email'),
+      message: fd.get('message'),
+      ts: new Date().toISOString()
+    };
+    // Simpan lokal
+    const inbox = read('lumer_feedback', []);
+    inbox.unshift(payload);
+    write('lumer_feedback', inbox);
+    document.getElementById('feedbackStatus').textContent = 'Terima kasih! Masukan Anda sudah kami terima.';
+    e.currentTarget.reset();
+  });
+
+  renderTestimonials();
 });
 
-// Feedback form (kritik & saran)
-const fbForm = document.getElementById('feedbackForm');
-const fbNote = document.getElementById('feedbackNote');
-fbForm.addEventListener('submit', (e)=>{
-  e.preventDefault();
-  const payload = {
-    name: document.getElementById('fName').value.trim(),
-    email: document.getElementById('fEmail').value.trim(),
-    message: document.getElementById('fMessage').value.trim(),
-    at: Date.now()
-  };
-  // Simpan lokal agar statis-friendly
-  const arr = JSON.parse(localStorage.getItem('lumerbites_feedback')||'[]');
-  arr.push(payload);
-  localStorage.setItem('lumerbites_feedback', JSON.stringify(arr));
-  fbForm.reset(); fbNote.hidden = false; setTimeout(()=>fbNote.hidden=true, 3500);
-});
+function openCart(){ document.getElementById('cartDrawer').classList.add('open'); document.getElementById('cartDrawer').setAttribute('aria-hidden','false'); }
+function closeCart(){ document.getElementById('cartDrawer').classList.remove('open'); document.getElementById('cartDrawer').setAttribute('aria-hidden','true'); }
